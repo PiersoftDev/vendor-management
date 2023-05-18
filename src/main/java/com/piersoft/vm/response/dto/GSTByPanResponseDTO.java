@@ -5,13 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponseDTO extends GenericResponseDTO {
+public class GSTByPanResponseDTO {
 
-    private List<String> errorMsgs;
+    private String status_code;
+
+    private GSTListByPanDTO data;
+
+    private String message_code;
+
+    private String success;
+
+    private String message;
 }

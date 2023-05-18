@@ -5,14 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SuccessResponseDTO extends GenericResponseDTO {
+public class PanGSTDTO {
 
-    private String successMsg;
+    private String active_status;
 
+    private String state;
+
+    private String gstin;
+
+    private String state_code;
 }
