@@ -69,4 +69,29 @@ public class VendorServiceImpl implements VendorService {
     public List<VendorKYC> listAllVendors() {
         return (List<VendorKYC>)vendorKYCRepository.findAll();
     }
+
+    @Override
+    public void onboardAllVendorsByPAN(String panNo) {
+        GSTByPanResponseDTO gstByPanResponseDTO = surepassUtil.fetchPANDetails(panNo);
+        if(gstByPanResponseDTO != null) {
+            List<PanGSTDTO> gstList = gstByPanResponseDTO.getData().getGstin_list();
+            if (!gstList.isEmpty()) {
+                for (PanGSTDTO gst : gstList) {
+                    if (!gst.getActive_status().equalsIgnoreCase("Active")) {
+                        continue;
+                    }
+                    GSTResponseDTO gstResponseDTO = surepassUtil.fetchGSTDetails(gst.getGstin());
+                    VendorKYC vendorKYC = VendorKYC.builder()
+                            .address(gstResponseDTO.getData().getAddress())
+                            .businessName(gstResponseDTO.getData().getBusiness_name())
+                            .state(gst.getState())
+                            .pan(panNo)
+                            .gst(gst.getGstin())
+                            .build();
+                    vendorKYCRepository.save(vendorKYC);
+                }
+
+            }
+        }
+    }
 }

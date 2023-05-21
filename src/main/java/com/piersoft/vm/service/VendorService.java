@@ -10,4 +10,6 @@ public interface VendorService {
     Integer onboardVendor(OnboardVendorDTO onboardVendorDTO);
 
     List<VendorKYC> listAllVendors();
+
+    void onboardAllVendorsByPAN(String panNo);
 }

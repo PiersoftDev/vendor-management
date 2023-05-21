@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/vm")
+@CrossOrigin
 public class VendorController {
 
     private static final Logger logger = LoggerFactory.getLogger(VendorController.class);
@@ -51,6 +52,19 @@ public class VendorController {
         }
         Integer totalGSTNosWithGivenPanNo = vendorService.onboardVendor(onboardVendorDTO);
         logger.debug("Successfully onboarded vendor");
+        return ResponseEntity.ok(GenericResponseDTO.builder().status_code(HttpStatus.OK).success(true).data("Successfully Onboarded Vendor").message_code("Multiple GSTs found under PAN, would you like to onboard them all ?").build());
+    }
+
+    @ApiOperation(value = "Onboard a vendor", notes = "Returns vendor onboarding status", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully onboarded a vendor"),
+            @ApiResponse(code = 404, message = "Filed to onboard a vendor")
+    })
+    @PostMapping("/onboard/{panNo}")
+    public ResponseEntity<GenericResponseDTO> onboardAllVendorsByPAN(@PathVariable(required = true) String panNo){
+        logger.debug("Onboarding all vendors for PAN No:"+panNo);
+        vendorService.onboardAllVendorsByPAN(panNo);
+        logger.debug("Onboarded all vendors for PAN No:"+panNo);
         return ResponseEntity.ok(GenericResponseDTO.builder().status_code(HttpStatus.OK).success(true).data("Successfully Onboarded Vendor").message_code("Multiple GSTs found under PAN, would you like to onboard them all ?").build());
     }
 

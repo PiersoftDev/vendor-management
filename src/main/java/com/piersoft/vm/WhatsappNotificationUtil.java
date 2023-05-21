@@ -23,7 +23,7 @@ public class WhatsappNotificationUtil {
 
     public void sendWelcomeMessage(){
 
-        String body = "{ \"messaging_product\": \"whatsapp\", \"to\": \"919945014010\", \"type\": \"template\", \"template\": { \"name\": \"welcome_message_template\", \"language\": { \"code\": \"en\" } } }";
+        String body = "{ \"messaging_product\": \"whatsapp\", \"to\": \"919945014010\", \"type\": \"template\", \"template\": { \"name\": \"welcome_message_template\", \"language\": { \"code\": \"en_US\" } } }";
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), body );
         String response =  apiClientUtil.makePostCall(url, token, requestBody );
         System.out.println(response);
