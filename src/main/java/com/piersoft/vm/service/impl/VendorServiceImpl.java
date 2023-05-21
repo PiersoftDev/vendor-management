@@ -2,6 +2,7 @@ package com.piersoft.vm.service.impl;
 
 import com.piersoft.vm.ApiClientUtil;
 import com.piersoft.vm.SurepassUtil;
+import com.piersoft.vm.WhatsappNotificationUtil;
 import com.piersoft.vm.persistence.entities.VendorKYC;
 import com.piersoft.vm.persistence.repositories.VendorKYCRepository;
 import com.piersoft.vm.request.dto.OnboardVendorDTO;
@@ -36,6 +37,9 @@ public class VendorServiceImpl implements VendorService {
     @Autowired
     private SurepassUtil surepassUtil;
 
+    @Autowired
+    private WhatsappNotificationUtil whatsappNotificationUtil;
+
 
     @Override
     public Integer onboardVendor(OnboardVendorDTO onboardVendorDTO) {
@@ -49,13 +53,20 @@ public class VendorServiceImpl implements VendorService {
                 VendorKYC vendorKYC = onboardVendorRequestMapper.requestToEntity(onboardVendorDTO);
                 vendorKYC.setAddress(gstResponseDTO.getData().getAddress());
                 vendorKYC.setBusinessName(gstResponseDTO.getData().getBusiness_name());
+                vendorKYC.setState(optionalGST.get().getState());
                 Long start = System.currentTimeMillis();
                 vendorKYCRepository.save(vendorKYC);
                 Long end = System.currentTimeMillis();
                 logger.info("Time taken to save the vendor details:"+(end-start));
+                whatsappNotificationUtil.sendWelcomeMessage();
             }
             return gstList.size();
         }
         return 0;
+    }
+
+    @Override
+    public List<VendorKYC> listAllVendors() {
+        return (List<VendorKYC>)vendorKYCRepository.findAll();
     }
 }

@@ -10,20 +10,15 @@ import java.nio.charset.Charset;
 @Component
 public class ApiClientUtil {
 
-    @Value("${surepass.token}")
-    private String token;
 
-    @Value("${surepass.era_domain}")
-    private String eraDomain;
-
-    public String makePostCall(String url , RequestBody requestBody){
+    public String makePostCall(String url ,String token, RequestBody requestBody){
         OkHttpClient client = new OkHttpClient.Builder().build();
 
 
         Request request = new Request.Builder()
                 .addHeader("Content-Type","application/json")
                 .addHeader("Authorization",token)
-                .url(eraDomain+url)
+                .url(url)
                 .post(requestBody)
                 .build();
 
