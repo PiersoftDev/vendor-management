@@ -1,4 +1,4 @@
-package com.piersoft.vm.request.dto;
+package com.piersoft.vm.dto.request;
 
 
 import lombok.AllArgsConstructor;

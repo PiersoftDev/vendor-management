@@ -1,8 +1,8 @@
 package com.piersoft.vm;
 
 import com.google.gson.Gson;
-import com.piersoft.vm.response.dto.GSTByPanResponseDTO;
-import com.piersoft.vm.response.dto.GSTResponseDTO;
+import com.piersoft.vm.dto.response.GSTByPanResponseDTO;
+import com.piersoft.vm.dto.response.GSTResponseDTO;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +37,7 @@ public class SurepassUtil {
         String response = apiClientUtil.makePostCall(eraDomain+"/api/v1/corporate/gstin-by-pan",token, requestBody );
         return  new Gson().fromJson(response, GSTByPanResponseDTO.class);
     }
+
+
 
 }

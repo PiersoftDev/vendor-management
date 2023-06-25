@@ -5,17 +5,25 @@ import com.piersoft.vm.SurepassUtil;
 import com.piersoft.vm.WhatsappNotificationUtil;
 import com.piersoft.vm.persistence.entities.VendorKYC;
 import com.piersoft.vm.persistence.repositories.VendorKYCRepository;
-import com.piersoft.vm.request.dto.OnboardVendorDTO;
-import com.piersoft.vm.request.dto.mapper.OnboardVendorRequestMapper;
-import com.piersoft.vm.response.dto.GSTByPanResponseDTO;
-import com.piersoft.vm.response.dto.GSTResponseDTO;
-import com.piersoft.vm.response.dto.PanGSTDTO;
+import com.piersoft.vm.dto.request.OnboardVendorDTO;
+import com.piersoft.vm.mapper.OnboardVendorRequestMapper;
+import com.piersoft.vm.dto.response.GSTByPanResponseDTO;
+import com.piersoft.vm.dto.response.GSTResponseDTO;
+import com.piersoft.vm.dto.response.PanGSTDTO;
 import com.piersoft.vm.service.VendorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +48,15 @@ public class VendorServiceImpl implements VendorService {
     @Autowired
     private WhatsappNotificationUtil whatsappNotificationUtil;
 
+    @Autowired
+    private S3Client s3Client;
+
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
+
+    @Value("${aws.s3.endpoint}")
+    private String endpoint;
+
 
     @Override
     public Integer onboardVendor(OnboardVendorDTO onboardVendorDTO) {
@@ -58,7 +75,7 @@ public class VendorServiceImpl implements VendorService {
                 vendorKYCRepository.save(vendorKYC);
                 Long end = System.currentTimeMillis();
                 logger.info("Time taken to save the vendor details:"+(end-start));
-                whatsappNotificationUtil.sendWelcomeMessage();
+                //whatsappNotificationUtil.sendWelcomeMessage();
             }
             return gstList.size();
         }
@@ -93,5 +110,27 @@ public class VendorServiceImpl implements VendorService {
 
             }
         }
+    }
+
+    @Override
+    public String uploadVendorDocument(String userId, String docType, MultipartFile imageFile) {
+        try {
+
+            String fileKey = userId+"/"+docType;
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileKey)
+                    .acl("public-read")
+                    .build();
+            InputStream is = new ByteArrayInputStream(imageFile.getBytes());
+            PutObjectResponse response = s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(is, imageFile.getSize()));
+            String publicUrl = endpoint+fileKey;
+            return publicUrl;
+
+        } catch (Exception e) {
+            // Handle exception appropriately
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.piersoft.vm.response.dto;
+package com.piersoft.vm.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

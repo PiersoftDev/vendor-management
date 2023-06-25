@@ -1,4 +1,4 @@
-package com.piersoft.vm.response.dto;
+package com.piersoft.vm.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GSTResponseDTO {
+public class GSTByPanResponseDTO {
+
     private String status_code;
 
-    private GSTDTO data;
+    private GSTListByPanDTO data;
 
     private String message_code;
 
