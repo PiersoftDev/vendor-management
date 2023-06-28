@@ -1,13 +1,13 @@
 package com.piersoft.vm.mapper;
 
-import com.piersoft.vm.persistence.entities.VendorKYC;
 import com.piersoft.vm.dto.request.OnboardVendorDTO;
+import com.piersoft.vm.persistence.entities.Vendor;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface OnboardVendorRequestMapper {
 
-    VendorKYC requestToEntity(OnboardVendorDTO onboardVendorDTO);
+    Vendor requestToEntity(OnboardVendorDTO onboardVendorDTO);
 
-    OnboardVendorDTO entityToRequest(VendorKYC vendorKYC);
+    OnboardVendorDTO entityToRequest(Vendor vendorKYC);
 }

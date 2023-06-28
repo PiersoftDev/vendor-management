@@ -2,8 +2,8 @@ package com.piersoft.vm.controller;
 
 
 import com.piersoft.vm.SurepassUtil;
-import com.piersoft.vm.persistence.entities.VendorKYC;
 import com.piersoft.vm.dto.request.OnboardVendorDTO;
+import com.piersoft.vm.persistence.entities.Vendor;
 import com.piersoft.vm.dto.response.GSTByPanResponseDTO;
 import com.piersoft.vm.dto.response.GenericResponseDTO;
 import com.piersoft.vm.service.VendorService;
@@ -81,7 +81,7 @@ public class VendorController {
             @ApiResponse(code = 404, message = "Not found - no vendors found")
     })
     @GetMapping("/list")
-    public ResponseEntity<List<VendorKYC>> listAllVendors(){
+    public ResponseEntity<List<Vendor>> listAllVendors(){
         logger.debug("Listing all vendors");
         return ResponseEntity.ok(vendorService.listAllVendors());
     }

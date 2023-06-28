@@ -3,9 +3,9 @@ package com.piersoft.vm.service.impl;
 import com.piersoft.vm.ApiClientUtil;
 import com.piersoft.vm.SurepassUtil;
 import com.piersoft.vm.WhatsappNotificationUtil;
-import com.piersoft.vm.persistence.entities.VendorKYC;
-import com.piersoft.vm.persistence.repositories.VendorKYCRepository;
 import com.piersoft.vm.dto.request.OnboardVendorDTO;
+import com.piersoft.vm.persistence.entities.Vendor;
+import com.piersoft.vm.persistence.repositories.VendorKYCRepository;
 import com.piersoft.vm.mapper.OnboardVendorRequestMapper;
 import com.piersoft.vm.dto.response.GSTByPanResponseDTO;
 import com.piersoft.vm.dto.response.GSTResponseDTO;
@@ -67,7 +67,7 @@ public class VendorServiceImpl implements VendorService {
             Optional<PanGSTDTO> optionalGST = gstList.stream().filter(gst -> gst.getGstin().equalsIgnoreCase(onboardVendorDTO.getGst()) && gst.getActive_status().equalsIgnoreCase("Active")).findAny();
             if(optionalGST.isPresent()){
                 GSTResponseDTO gstResponseDTO = surepassUtil.fetchGSTDetails(onboardVendorDTO.getGst());
-                VendorKYC vendorKYC = onboardVendorRequestMapper.requestToEntity(onboardVendorDTO);
+                Vendor vendorKYC = onboardVendorRequestMapper.requestToEntity(onboardVendorDTO);
                 vendorKYC.setAddress(gstResponseDTO.getData().getAddress());
                 vendorKYC.setBusinessName(gstResponseDTO.getData().getBusiness_name());
                 vendorKYC.setState(optionalGST.get().getState());
@@ -83,8 +83,8 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<VendorKYC> listAllVendors() {
-        return (List<VendorKYC>)vendorKYCRepository.findAll();
+    public List<Vendor> listAllVendors() {
+        return (List<Vendor>)vendorKYCRepository.findAll();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class VendorServiceImpl implements VendorService {
                         continue;
                     }
                     GSTResponseDTO gstResponseDTO = surepassUtil.fetchGSTDetails(gst.getGstin());
-                    VendorKYC vendorKYC = VendorKYC.builder()
+                    Vendor vendorKYC = Vendor.builder()
                             .address(gstResponseDTO.getData().getAddress())
                             .businessName(gstResponseDTO.getData().getBusiness_name())
                             .state(gst.getState())
