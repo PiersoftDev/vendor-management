@@ -24,6 +24,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +72,9 @@ public class VendorServiceImpl implements VendorService {
                 vendorKYC.setAddress(gstResponseDTO.getData().getAddress());
                 vendorKYC.setBusinessName(gstResponseDTO.getData().getBusiness_name());
                 vendorKYC.setState(optionalGST.get().getState());
+                vendorKYC.setCreatedDate(LocalDate.now());
+                vendorKYC.setUpdatedDate(LocalDate.now());
+                vendorKYC.setStatus("DRAFT");
                 Long start = System.currentTimeMillis();
                 vendorKYCRepository.save(vendorKYC);
                 Long end = System.currentTimeMillis();
